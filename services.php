@@ -81,5 +81,53 @@ function depotService(){
     afficherMessage("Depot OK");
 }
 
+function calculFrais($m){
+    if ($m <= 10000) {
+      return 200;
+    }
+
+    if ($m <= 100000) {
+     return 500;
+    }
+
+    $f = $m * 0.01;
+
+    if ($f > 5000) {
+     $f = 5000;
+    }
+
+    return $f;
+}
+
+function retraitService(){
+    global $wallets;
+
+    $tel = demanderSaisie("Telephone : ");
+    $i = trouverWallet($tel);
+
+    while ($i == -1) {
+        afficherMessage("Wallet inconnu");
+        $tel = demanderSaisie("Telephone : ");
+        $i = trouverWallet($tel);
+    }
+
+    $m = demanderSaisie("Montant : ");
+
+    while (!montantValide($m)) {
+        afficherMessage("Montant invalide");
+        $m = demanderSaisie("Montant : ");
+    }
+
+    $f = calculFrais($m);
+    $total = $m + $f;
+
+    if ($wallets[$i]["solde"] < $total) {
+        afficherMessage("Solde insuffisant");
+        return;
+    }
+
+    $wallets[$i]["solde"] -= $total;
+    afficherMessage("Retrait OK frais=$f");
+}
 
 ?>

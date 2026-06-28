@@ -12,6 +12,10 @@ function controler($choix){
             depotService();
             break;
 
+        case 3:
+            retraitService();
+            break;
+
         default:
             afficherMessage("Choix invalide");
     }
