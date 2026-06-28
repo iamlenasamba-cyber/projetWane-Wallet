@@ -23,5 +23,12 @@ global $wallets;
 $wallets[]=$wallet;
 }
 
+function ajouterTransaction($transaction){
+global $transactions;
+
+$transactions[]=$transaction;
+
+}
+
 
 ?>

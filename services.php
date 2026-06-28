@@ -8,7 +8,7 @@ function demanderSaisie($message){
 }
 
 function afficherMessage($message){
-    echo $message;
+    echo $message . PHP_EOL;
 }
 
 function afficherMenu(){
@@ -19,7 +19,6 @@ function afficherMenu(){
     echo "\n4_Lister les Transactions";
     echo "\n0_Quitter\n";
 }
-
 
 function creerWalletService(){
     global $wallets;
@@ -60,3 +59,27 @@ function creerWalletService(){
     ajouterWallet($wallet);
     afficherMessage("Wallet créé");
 }
+
+function depotService(){
+    global $wallets;
+
+    $tel = demanderSaisie("Telephone : ");
+    $i = trouverWallet($tel);
+
+    while ($i == -1) {
+        afficherMessage("Wallet inconnu");
+        $tel = demanderSaisie("Telephone : ");
+     $i = trouverWallet($tel);
+    }
+
+    $m = demanderSaisie("Montant : ");
+    while (!montantValide($m)) {
+        afficherMessage("Montant invalide");
+      $m = demanderSaisie("Montant : ");
+    }
+    $wallets[$i]["solde"] += $m;
+    afficherMessage("Depot OK");
+}
+
+
+?>

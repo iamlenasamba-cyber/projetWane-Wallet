@@ -8,6 +8,9 @@ function controler($choix){
             creerWalletService();
             break;
 
+        case 2:
+            depotService();
+            break;
 
         default:
             afficherMessage("Choix invalide");
