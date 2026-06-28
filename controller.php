@@ -16,6 +16,10 @@ function controler($choix){
             retraitService();
             break;
 
+        case 4:
+            transactionsService();
+            break;
+
         default:
             afficherMessage("Choix invalide");
     }

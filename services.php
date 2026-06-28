@@ -20,6 +20,11 @@ function afficherMenu(){
     echo "\n0_Quitter\n";
 }
 
+function afficherTransaction($transaction){
+    print_r($transaction);
+    echo PHP_EOL;
+}
+
 function creerWalletService(){
     global $wallets;
 
@@ -61,7 +66,7 @@ function creerWalletService(){
 }
 
 function depotService(){
-    global $wallets;
+    global $wallets, $transactions;
 
     $tel = demanderSaisie("Telephone : ");
     $i = trouverWallet($tel);
@@ -69,15 +74,22 @@ function depotService(){
     while ($i == -1) {
         afficherMessage("Wallet inconnu");
         $tel = demanderSaisie("Telephone : ");
-     $i = trouverWallet($tel);
+        $i = trouverWallet($tel);
     }
 
     $m = demanderSaisie("Montant : ");
     while (!montantValide($m)) {
         afficherMessage("Montant invalide");
-      $m = demanderSaisie("Montant : ");
+        $m = demanderSaisie("Montant : ");
     }
+
     $wallets[$i]["solde"] += $m;
+    ajouterTransaction([
+        "type" => "depot",
+        "telephone" => $tel,
+        "montant" => $m,
+        "nouveau_solde" => $wallets[$i]["solde"]
+    ]);
     afficherMessage("Depot OK");
 }
 
@@ -100,7 +112,7 @@ function calculFrais($m){
 }
 
 function retraitService(){
-    global $wallets;
+    global $wallets, $transactions;
 
     $tel = demanderSaisie("Telephone : ");
     $i = trouverWallet($tel);
@@ -127,7 +139,26 @@ function retraitService(){
     }
 
     $wallets[$i]["solde"] -= $total;
+    ajouterTransaction([
+        "type" => "retrait",
+        "telephone" => $tel,
+        "montant" => $m,
+        "frais" => $f,
+        "nouveau_solde" => $wallets[$i]["solde"]
+    ]);
     afficherMessage("Retrait OK frais=$f");
 }
 
+function transactionsService(){
+    global $transactions;
+
+    if (empty($transactions)) {
+        afficherMessage("Aucune transaction");
+        return;
+    }
+
+    foreach ($transactions as $t) {
+        afficherTransaction($t);
+    }
+}
 ?>
